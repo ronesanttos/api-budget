@@ -23,6 +23,8 @@ router.patch("/", verifyToken, async (req, res) => {
     const userReqId = req.body.id
     const password = req.body.password
     const confirmPass = req.body.confirmPass
+    const company = req.body.company
+    const whats = req.body.whats
 
     const userId = user._id.toString()
 
