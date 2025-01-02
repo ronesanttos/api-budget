@@ -7,6 +7,31 @@ const Budget = require("../models/budget")
 const verifyToken = require("../helpers/checkToken")
 const getUserToken = require("../helpers/getToken")
 
+router.get("/", async (req, res) => {
+    try {
+        const id = req.params
+        const budget = await Budget.findOne({ _id: id })
+
+        if (budget) {
+            res.json({ error: null, budget: budget })
+        }
+        else {
+            const token = req.header("auth-token")
+            const user = await getUserToken(token)
+
+            const userId = user._id.toString()
+            const budgetUserId = budget.userId.toString()
+
+            if (userId == budgetUserId) {
+                res.json({ error: null, budget: budget })
+            }
+        }
+
+    } catch (error) {
+        return res.status(400).json({ error: "Orçamento não encontrado!" })
+    }
+})
+
 router.post("/", verifyToken, async (req, res) => {
     const name_cliente = req.body.name_cliente
     const anddress = req.body.anddress
@@ -111,7 +136,7 @@ router.patch("/:id", verifyToken, async (req, res) => {
 
     try {
         const updateBudget = await Budget.findOneAndUpdate({ _id: id }, { $set: newBudget }, { new: true })
-        return res.json({error: null, msg : "Atualizado com sucesso!", data: updateBudget})
+        return res.json({ error: null, msg: "Atualizado com sucesso!", data: updateBudget })
     } catch (error) {
         res.status(400).json({ error })
     }
