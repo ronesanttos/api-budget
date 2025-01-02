@@ -124,6 +124,10 @@ router.patch("/:id", verifyToken, async (req, res) => {
     const userToken = await getUserToken(token)
     const userId = userToken._id.toString()
 
+    if (id != budget._id) {
+        return res.status(400).json({ error: "Acesso negado!" })
+    }
+
     const newBudget = {
         id: id,
         name_cliente: name_cliente,
