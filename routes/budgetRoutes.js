@@ -7,7 +7,7 @@ const Budget = require("../models/budget")
 const verifyToken = require("../helpers/checkToken")
 const getUserToken = require("../helpers/getToken")
 
-router.get("/", async (req, res) => {
+router.get("/:id", async (req, res) => {
     try {
         const id = req.params
         const budget = await Budget.findOne({ _id: id })
